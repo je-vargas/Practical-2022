@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using InterviewTest.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using InterviewTest.Models;
@@ -26,10 +27,12 @@ namespace InterviewTest.Controllers
             return View();
         }
 
-        public IActionResult Results()
+        public IActionResult Results(int currentPage=1)
         {
-            //_db.Contacts //Get your entities from here to populate your view.
-            return View();
+            var pageLimit = 10;
+            var contacts = _db.Contacts.Skip(pageLimit * (currentPage - 1)).Take(pageLimit);
+
+            return View(contacts);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

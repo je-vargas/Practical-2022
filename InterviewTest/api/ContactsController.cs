@@ -1,8 +1,10 @@
 ﻿using InterviewTest.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,10 +25,15 @@ namespace InterviewTest.Api
             _db = db;
         }
 
-        public IActionResult Get()
-        {
-            return Ok(_db.Contacts.Take(10).ToList());
-        }
 
+        public IActionResult Get(int pageLimit=10, int currentPage=1)
+        {
+            if(currentPage < 1) currentPage = 1;
+            if (pageLimit <= 0 || pageLimit.Equals(null)) pageLimit = 10;
+
+            var contacts = _db.Contacts.Skip(pageLimit * (currentPage - 1)).Take(pageLimit);
+
+            return Ok(contacts);
+        }
     }
 }
